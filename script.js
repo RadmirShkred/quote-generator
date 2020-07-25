@@ -3,9 +3,28 @@ const quoteText = document.getElementById('quote');
 const authorText = document.getElementById('author');
 const twitterBtn = document.getElementById('twitter');
 const newQuoteBtn = document.getElementById('new-quote');
+const loader = document.getElementById('loader');
+const animation = document.getElementById('animation');
+
+//Show loading
+function loading() {
+    loader.hidden = false;
+    animation.hidden = false;
+    quoteContainer.hidden = true;
+}
+
+//Hide loading
+function complete() {
+    if (!loader.hidden) {
+        quoteContainer.hidden = false;
+        loader.hidden = true;
+        animation.hidden = true;
+    }
+}
 
 // Get Quote From API
 async function getQuote() {
+    loading();
     const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
     const apiUrl = 'http://api.forismatic.com/api/1.0/?method=getQuote&lang=ru&format=json';
     try {
@@ -24,6 +43,8 @@ async function getQuote() {
             quoteText.classList.remove('long-quote');
         }
         quoteText.innerText = data.quoteText;
+        //Stop Loader, show Quote
+        complete();
     } catch (error) {
         getQuote();
     }
@@ -43,3 +64,4 @@ twitterBtn.addEventListener('click', tweetQuote);
 
 //On Load
 getQuote();
+
